@@ -1,0 +1,30 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textViewClicker"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Натиснуто: 0"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
+    <TextView
+        android:id="@+id/textViewTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="00:00"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="250dp" />
+
+    <Button
+        android:id="@+id/buttonTap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Натисніть!"
+        android:layout_below="@id/textViewClicker"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp" />
+</RelativeLayout>
