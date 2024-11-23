@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/messageHandler1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Зміна тексту при натисканні кнопки"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"/>
+
+    <Button
+        android:id="@+id/startHandlerButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start handler!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/messageHandler1" />
+
+    <TextView
+        android:id="@+id/messageHandler2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Фоновий потік"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/messageHandler1"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"/>
+
+    <TextView
+        android:id="@+id/messageHandler3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Текст 3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/messageHandler2"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"/>
+
+    <TextView
+        android:id="@+id/messageHandler4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Відправка повідомлення"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/messageHandler3"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="20dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
