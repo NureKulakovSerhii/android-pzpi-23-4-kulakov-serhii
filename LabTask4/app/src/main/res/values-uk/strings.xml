@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name">Додавання нотатки</string>
+    <string name="find_note">Знайти нотатку</string>
+    <string name="add_note">Додати нотатку</string>
+    <string name="title">Назва нотатки</string>
+    <string name="description">Опис нотатки</string>
+    <string name="choose_date">Призначити дату</string>
+    <string name="choose_time">Призначити час</string>
+    <string name="choose_pic">Обрати картинку</string>
+    <string name="save">Зберегти</string>
+</resources>
