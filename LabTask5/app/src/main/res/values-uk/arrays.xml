@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="priority_levels">
+        <item>Низький</item>
+        <item>Середній</item>
+        <item>Високий</item>
+    </string-array>
+
+
+
+    <string-array name="priority_levels_for_bar">
+        <item>Всі</item>
+        <item>Низький</item>
+        <item>Середній</item>
+        <item>Високий</item>
+    </string-array>
+
+    <string-array name="themes">
+        <item>Світла тема</item>
+        <item>Темна тема</item>
+    </string-array>
+
+    <string-array name="fonts">
+        <item>12шр</item>
+        <item>14шр</item>
+        <item>18шр</item>
+    </string-array>
+</resources>

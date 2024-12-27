@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="name">Adding Note</string>
+    <string name="find_note">Find Note</string>
+    <string name="add_note">Add note</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
+    <string name="choose_date">Choose Date</string>
+    <string name="choose_time">Choose Time</string>
+    <string name="choose_pic">Choose Picture</string>
+    <string name="save">Save</string>
+    <string name="font">Font</string>
+</resources>
