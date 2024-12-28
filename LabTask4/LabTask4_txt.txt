@@ -1,0 +1,280 @@
+МІНІСТЕРСТВО ОСВТИ І НАУКИ УКРАЇНИ
+
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+
+
+
+
+
+ЗВІТ
+з лабораторної роботи №4
+з дисципліни “Програмування під Android”
+
+
+
+
+
+
+
+Виконав:								Перевірив:
+ст. гр. ПЗПІ-23-4							Сокорчук І. П.
+Кулаков С. М.
+
+
+
+
+Харків, 2024
+ЗАВДАННЯ
+Розробити застосунок для ведення нотаток.
+Застосунок повинен дозволяти переглядати список нотаток, створювати нову нотатку, редагувати нотатку та видаляти нотатку. Кожна нотатка повинна мати назву, опис, важливість (три класи), час і дату призначення і картинку (вибирається з галереї).
+У списку нотатки відображаються з іконкою з галереї і часом створення (праворуч зверху більш дрібним шрифтом), а також графічним відображенням класу важливості (іконка з множини).
+Потрібно реалізувати функції додавання, видалення, редагування (без збереження між перезапуск додатку) нотаток.
+Видалення/редагування викликаються з контекстного меню при довгому натисненні, додавання - з основного меню в ActionBar. У ActionBar реалізувати пошук / фільтрація заміток за змістом тексту, а також фільтрацію за важливістю. Текстові елементи користувацького інтерфейсу повинні бути локалізовані українською та англійською мовами.
+
+
+
+
+
+
+ХІД РОБОТИ 
+	Створюємо новий проект в Android Studio. Спочатку потрібно створити клас нашої нотатки:
+1.public class Note {
+2.    private String Title;
+3.    private String Description;
+4.    private int Priority;
+5.    private Date CreateDate;
+6.    private Date DueDate;
+7.    private int DueHour;
+8.    private String PhotoPath;
+
+	Далі створимо конструктор цього класу:
+1.public Note(String Title, String Description, int Priority, Date CreateDate, Date DueDate, int DueHour, String PhotoPath) {
+2.    this.Title = Title;
+3.    this.Description = Description;
+4.   this.Priority = Priority;
+5.    this.CreateDate = CreateDate;
+6.    this.DueDate = DueDate;
+7.    this.PhotoPath = PhotoPath;
+8.    this.DueHour = DueHour;
+9.    }
+
+	Далі створимо action_bar, який буде мати поле пошуку нотатки за її назвою або описом та пошук нотатки за класом важливості. Код буде міститися у ДОДАТКУ А.
+	Далі створимо клас Notes:
+1.public class Notes {
+2.    private static List<Note> notes = new ArrayList<>();
+3.    public static List<Note> getNotes(){
+4.      return notes;
+5.    };
+6. }
+	Тепер черга для створення xml. Файлу нотатку, який буде містити в собі назву нотатки, опис нотатки, іконку важливості, час створення і обрану картинку з галереї. Код файлу буде міститися у ДОДАТКУ Б.
+	Оскільки за умовами лабораторної роботи застосунок повинен бути локалізованим англійскою та українською мовами то необхідно створити файл strings.xml англійскою та strings-uk.xml укрїнською мовами.
+	Англійською:
+1.<resources>
+2.     <string name="name">Adding Note</string>
+3.     <string name="find_note">Find Note</string>
+4.     <string name="add_note">Add note</string>
+5.     <string name="title">Title</string>
+6.     <string name="description">Description</string>
+7.     <string name="choose_date">Choose Date</string>
+8.     <string name="choose_time">Choose Time</string>
+9.     <string name="choose_pic">Choose Picture</string>
+10.     <string name="save">Save</string>
+11. </resources>\
+
+	Українською:
+1.<resources>
+2.     <string name="name">Додавання нотатки</string>
+3.     <string name="find_note">Знайти нотатку</string>
+4.     <string name="add_note">Додати нотатку</string>
+5.     <string name="title">Назва нотатки</string>
+6.     <string name="description">Опис нотатки</string>
+7.     <string name="choose_date">Призначити дату</string>
+8.     <string name="choose_time">Призначити час</string>
+9.     <string name="choose_pic">Обрати картинку</string>
+10.    <string name="save">Зберегти</string>
+11. </resources>
+	Інші частини коду будуть розташовані в ДОДАТКУ В.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ВИСНОВКИ
+	Під час виконання лабораторної роботи ми навчилися створювати повноцінний Android застосунок. Отримані знання допоможуть нам в майбутньому при створенні більш складних проектів.
+	Відеозвіт: https://youtu.be/htw4E6YQjBE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ВИКОРИСТАНІ ДЖЕРЕЛА
+1)https://javarush.com/ua
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК А
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_toStartOf="@id/spinnerPriorityFilter"
+        android:layout_marginEnd="8dp"
+        android:queryHint="@string/find_note" />
+
+    <Spinner
+        android:id="@+id/spinnerPriorityFilter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:entries="@array/priority_levels_for_bar" />
+</RelativeLayout>
+
+
+
+
+
+ДОДАТОК Б
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@android:color/white"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/priorityIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/level1" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/noteTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/noteDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/description"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noteDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:00"
+        android:textSize="12sp"
+        android:layout_marginEnd="8dp" />
+    <ImageView
+        android:id="@+id/noteImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:scaleType="centerCrop" />
+
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК В
+Інший код міститься на GitHub за посиланням:
+https://github.com/NureKulakovSerhii/android-pzpi-23-4-kulakov-serhii/tree/main/LabTask4
+
+
+
+
+
+
