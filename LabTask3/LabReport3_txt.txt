@@ -1,0 +1,726 @@
+МІНІСТЕРСТВО ОСВТИ І НАУКИ УКРАЇНИ
+
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+
+
+
+
+
+ЗВІТ
+з лабораторної роботи №3
+з дисципліни “Програмування під Android”
+
+
+
+
+
+
+
+Виконав:								Перевірив:
+ст. гр. ПЗПІ-23-4							Сокорчук І. П.
+Кулаков С. М.
+
+
+
+
+Харків, 2024
+ЗАВДАННЯ
+Розробити калькулятор на 4 базові арифметичні операції з кнопками для введення аргументів і дій.
+Калькулятор повинен мати адаптивний користувацький інтерфейс у різних орієнтаціях екрану та на екранах різної роздільної здатності.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ХІД РОБОТИ
+	Створюємо новий проєкт в Android Studio. Для того щоб створити калькулятор на 4 базові дії спочатку необхідно створити його розмітку: портретну та ландшафтну. Інтерфейс калькулятору буде містити настпуні елменти: цифри з 0 по 9, кнопки для 4 базових операцій, крапку, кнопку для сбросу попереднього числа, знак “дорівнює” та елемент editText для виводу значень. Властивість enable у елементі editText встановлена як false, оскільки користувач не має нічого писати в калькуляторі, бо вся взаємодія відбувається через кнопки.
+1.<EditText
+2.    android:id="@+id/editText"
+3.    android:layout_width="match_parent"
+4.    android:layout_height="0dp"
+5.    android:layout_weight="1.5"
+6.    android:background="@color/grey"
+7.    android:gravity="right|center"
+8.    android:inputType="text"
+9.    android:padding="16dp"
+10.    android:text="0"
+11.    android:textSize="36sp"
+12.    android:enabled="false"/>
+
+Для розмітки було використано LinearLayout для загальної організації структури та TableLayout для створення кнопок калькулятора у вигляді таблиці. На мою думку це доречна ідея, бо кнопки калькулятора, окрім кнопки “дорівнює” мають ідентичні розміри і TableLayout дозволяє рівномірно розподілити їх по рядках і колонках. Повний код розмітки для портретної орієнтації буде розташований в ДОДАТКУ А, для ландшафтної орієнтації у ДОДАТКУ Б. Код розмітки кнопки продемонтсрую на прикладі кнопки “7”, інші кнопки - ідентичні
+1.<Button
+2.    android:id="@+id/button7"
+3.    android:layout_width="0dp"
+4.    android:layout_weight="1"
+5.    android:layout_height="match_parent"
+6.    android:backgroundTint="@color/orange"
+7.    android:onClick="numberClick"
+8.    android:text="7"
+9.    android:textSize="30sp"
+10.    android:padding="2dp" />
+
+	Тепер до функціоналу. Спершу необхідно створити метод, завдяки якому в наш елемент “текствью” буде записуватись та цифра, на яку натиснув користувач. Як показано вище, при натисненні на кнопку, що відповідає за ввод цифри, викликається метод numberClick. Даний метод громісткий, оскільки він є дійсним для 9 кнопок, тому я наведу приклад його використання для цифри “1”.
+1.public void numberClick(View view) {
+2.    String number = editText.getText().toString();
+3.    if (isNew) {
+4.        number = "";
+5.        isNew = false;
+6.    }
+7.    if (number.length() >= 12) {
+8.        return;
+9.    }
+10.    if (view.getId() == R.id.button1) {
+11.       if (NullIsFirst(number) && number.length() == 1) 12. {
+13.            number = number.substring(1);
+14.        }
+15.        number += "1";
+16.    }
+
+В цьому методі строка “number” отримує текст із editText та зберігає його в змінну “number”. Далі іде перевірка, чи потрібно починати новий ввід. Якщо так, то змінна “number” очищується, щоб почати вводити нове число. І якщо довжина нашого числа не більша за 12 до ми додаємо до нього нову цифру, в цьому випадку - 1.
+Цікавий випадок, коли користувач натисне “кому”. Тоді в нас виконується перевірка, чи існує вже кома. Якщо так, то програма не дозволить поставити ще одну. Цк код з того ж самого методу numberClick, а нижче перевірка, чи існує кома.
+
+1.else if (view.getId() == R.id.buttonPoint) {
+2.    if (PointExist(number)) {
+3.        return;
+4.    }
+Перевірка:
+1.private boolean PointExist(String number){
+2.    return number.indexOf(".") != -1;
+3.}
+
+Не менш важливим є метод operationClick. Приклад методу operationClick на прикладі операції віднімання
+1.public void operationClick(View view) {
+2.    isNew = true;
+3.    prevNum = editText.getText().toString();
+
+4.    if (view.getId() == R.id.buttonMinus) {
+5.        operator = "-";
+
+В цьому методі прапорець “isNew” встановлюється у true, що сигналізує про те, що поле вводу буде очищене чи оновлене для нового числа. Далі поточне значення записується в змінну prevNum для подальшого обчислення. І в решті-решт виконується перевірка, на яку саме операцію натиснув користувач.
+
+Метод clickAC
+1.public void clickAC(View view){
+2.    editText.setText("0");
+3.    isNew = true;
+4. }
+Функція цього методу - очищення текстового поля, завдяки встановленню в нього значення “0”.
+
+Метод clickResult виконує підрахунок взаємодії двох чисел, в залежності від операції, яку обрав користувач. Спочатку він перетворює рядки чисел у формат “Double” та виконує підрахунки. Далі метод форматує отриманий результат у обраний мною формат (#.#######). Це потрібно для того, щоб результат округлявся до певного значення, тобто це унеможливлює появи превеликого числа, наприклад яке виникає при діленні числа 1 на число 3. Після цієї перевірки виконується ще одна перевірка на довжину числа, якщо вона не більша за 17 символів, то число виводиться на екран. В іншому випадку користувач отримує повідомлення про помилку. Повний код методу clickResult наведения у ДОДАТКУ В.
+
+
+ВИСНОВКИ
+Під час виконання лабораторної роботи було спроектовано застосунок “Калькулятор”, що виконує 4 базові операції. Також було закріплено знання з обробки подій при використанні кнопок та відображення записаних даних на екрані.
+Посилання на звіт: https://youtu.be/QxUC5EMYc-k
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ВИКОРИСТАНІ ДЖЕРЕЛА
+1 - https://javarush.com/ua/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК А
+
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:background="@color/grey"
+        android:gravity="right|center"
+        android:inputType="text"
+        android:padding="16dp"
+        android:text="0"
+        android:textSize="36sp"
+        android:enabled="false"/>
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:stretchColumns="*"
+        android:padding="0dp"
+        android:layout_margin="0dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:layout_margin="0dp">
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="numberClick"
+                android:text="7"
+                android:textSize="30sp"
+                android:padding="2dp" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="numberClick"
+                android:text="8"
+                android:textSize="30sp"
+                android:padding="2dp" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="numberClick"
+                android:text="9"
+                android:textSize="30sp"
+                android:padding="2dp" />
+
+            <Button
+                android:id="@+id/buttonPlus"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="operationClick"
+                android:text="+"
+                android:textSize="30sp"
+                android:padding="2dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:layout_margin="0dp">
+            <Button
+                android:id="@+id/button4"
+                android:text="4"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/button5"
+                android:text="5"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/button6"
+                android:text="6"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/buttonMinus"
+                android:text="-"
+                android:onClick="operationClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:layout_margin="0dp">
+            <Button
+                android:id="@+id/button1"
+                android:text="1"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/button2"
+                android:text="2"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/button3"
+                android:text="3"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/buttonMultiply"
+                android:text="*"
+                android:onClick="operationClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="0dp"
+            android:layout_margin="0dp">
+            <Button
+                android:id="@+id/buttonNull"
+                android:text="0"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/buttonPoint"
+                android:text="."
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/buttonAC"
+                android:text="AC"
+                android:onClick="clickAC"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+            <Button
+                android:id="@+id/buttonDivide"
+                android:text="/"
+                android:onClick="operationClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp"
+                android:padding="2dp" />
+        </TableRow>
+    </TableLayout>
+
+    <Button
+        android:id="@+id/buttonCalculate"
+        android:text="="
+        android:onClick="clickResult"
+        android:textSize="24sp"
+        android:backgroundTint="@color/light_blue"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.5"
+        android:padding="2dp" />
+</LinearLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК Б
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="313dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:background="@color/grey"
+        android:gravity="right|center"
+        android:inputType="text"
+        android:padding="8dp"
+        android:text="0"
+        android:textSize="36sp" />
+
+    <TableLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="7"
+        android:stretchColumns="*">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/button7"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="numberClick"
+                android:text="7"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/button8"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="numberClick"
+                android:text="8"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/button9"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="numberClick"
+                android:text="9"
+                android:textSize="30sp" />
+
+            <Button
+                android:id="@+id/buttonPlus"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:onClick="operationClick"
+                android:text="+"
+                android:textSize="30sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/button4"
+                android:text="4"
+                android:onClick="numberClick"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/button5"
+                android:text="5"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/button6"
+                android:text="6"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/buttonMinus"
+                android:text="-"
+                android:onClick="operationClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:layout_height="match_parent"
+                android:textSize="30sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/button1"
+                android:text="1"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/button2"
+                android:text="2"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/button3"
+                android:text="3"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/buttonMultiply"
+                android:text="*"
+                android:onClick="operationClick"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+            <Button
+                android:id="@+id/buttonNull"
+                android:text="0"
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/buttonPoint"
+                android:text="."
+                android:onClick="numberClick"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/buttonAC"
+                android:text="AC"
+                android:onClick="clickAC"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+            <Button
+                android:id="@+id/buttonDivide"
+                android:text="/"
+                android:layout_height="match_parent"
+                android:onClick="operationClick"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/light_blue"
+                android:textSize="30sp" />
+        </TableRow>
+
+
+    <Button
+        android:id="@+id/buttonCalculate"
+        android:text="="
+        android:onClick="clickResult"
+        android:textSize="24sp"
+        android:backgroundTint="@color/light_blue"
+        android:layout_width="match_parent"
+        android:layout_height="39dp"
+        android:layout_weight="1" />
+    </TableLayout>
+</LinearLayout>
+
+
+
+
+
+
+
+
+ДОДАТОК В
+public void clickResult(View view) {
+    String newNumber = editText.getText().toString();
+    Double result = 0.0;
+    try {
+        Double firstNumber = Double.parseDouble(prevNum);
+        Double secondNumber = Double.parseDouble(newNumber);
+        if(previousOperator != null) {
+            switch (previousOperator) {
+                case "-":
+                    result = firstNumber - secondNumber;
+                    break;
+                case "+":
+                    result = firstNumber + secondNumber;
+                    break;
+                case "*":
+                    result = firstNumber * secondNumber;
+                    break;
+                case "/":
+                    if (secondNumber == 0) {
+                        editText.setText("Error");
+                        return;
+                    }
+                    result = firstNumber / secondNumber;
+                    break;
+            }
+        }
+        prevNum = Double.toString(result);
+        operator = "";
+        isNew = true;
+        DecimalFormat decimalFormat = new DecimalFormat("#.#######");
+        String formattedResult = decimalFormat.format(result);
+        if (formattedResult.length() <= 17) {
+            editText.setText(formattedResult);
+            prevNum = formattedResult;
+            operator = "";
+            isNew = true;
+        }
+        else{
+            editText.setText("Превелике число!");
+        }
+    } catch (NumberFormatException e) {
+        editText.setText("Error");
+    }
+}
+
