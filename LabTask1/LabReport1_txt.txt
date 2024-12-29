@@ -1,0 +1,163 @@
+МІНІСТЕРСТВО ОСВТИ І НАУКИ УКРАЇНИ
+
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+
+
+
+
+
+ЗВІТ
+з лабораторної роботи №1
+з дисципліни “Програмування під Android”
+
+
+
+
+
+
+
+Виконав:								Перевірив:
+ст. гр. ПЗПІ-23-4							Сокорчук І. П.
+Кулаков С. М.
+
+
+
+
+Харків, 2024
+ЗАВДАННЯ
+Встановити Android Studio та створити мінімальний застосунок для Android.
+　　　　 Застосунок повинен містити одну активність (Activity). В активності потрібно реалізувати усі базові методи життєвого циклу активностей. При запуску застосунку у центрі екрану повинен з'являтися напис «Task 1». Для розмітки екрану активності потрібно використати лінійну розмітку (Linear Layout).
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+
+ХІД РОБОТИ
+　　　　Встановлено Android Studio версії 2024.12.1 на операційну систему Windows 10. Проведено тестування середовища через запуск стандартного проєкту.
+	У рамках виконання лабораторної роботи №1 було створено активність MainActivity, у якій реалізовано методи життєвого циклу: onCreate, onStart, onResume, onPause, onStop, onDestroy. Код класу внесено до Додатку А.
+	Розроблено XML-розмітку для файлу activity.main.xml, яка включає лінійне компонування з вертикальною орієнтацією та текстовий елемент для відображання напису “Task 1” в центрі екрану. Код розмітки наведено у Додатку Б.
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+ВИСНОВКИ
+　　　　Під час виконання лабораторної роботи було встановлено середовище розробки Android Studio, розроблено мінімальний застосунок, що включає одну активність з реалізацією всіх методів життєвого циклу. Забезпечено коректну роботу застосунку на реальному пристрої та емуляторі.
+Посилання: https://youtu.be/rDzYabH7G_o
+　　　　
+
+
+
+
+
+
+
+
+
+
+
+
+ВИКОРИСТАНІ ДЖЕРЕЛА
+ 1 -https://dl.nure.ua/course/view.php?id=24148
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК А
+package com.example.myapplication;
+
+ import android.os.Bundle;
+ import android.util.Log;
+
+ import androidx.activity.EdgeToEdge;
+ import androidx.appcompat.app.AppCompatActivity;
+ import androidx.core.graphics.Insets;
+ import androidx.core.view.ViewCompat;
+ import androidx.core.view.WindowInsetsCompat;
+
+ public class MainActivity extends            	AppCompatActivity {
+  private static final String TAG =           	"Lifecycle";
+
+
+  @Override
+    protected void onCreate(Bundle            	savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_main);
+        Log.d(TAG, "OnCreate");
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(TAG, "OnStart");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       Log.d(TAG, "OnResume");
+    }
+
+    @Override
+   protected void onPause() {
+        super.onPause();
+        Log.d(TAG, "OnPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(TAG, "OnPause");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "OnDestroy");
+    }
+}
+
+Додаток Б:
+ <?xml version="1.0" encoding="utf-8"?>
+
+ <LinearLayout
+                                               xmlns:android="http://schemas.android.com/apk/re6 s/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+   android:orientation="vertical"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Task 1"
+        android:textSize="24sp"
+                                              	android:textColor="@android:color/black" />
+ </LinearLayout>
+
