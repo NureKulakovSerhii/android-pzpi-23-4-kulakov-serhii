@@ -1,0 +1,294 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ
+
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+
+
+
+
+
+
+ЗВІТ 
+з практичного заняття №2
+з дисципліни “Програмування під Android”
+
+
+
+
+
+
+
+Виконав:								Перевірив:
+ст. гр. ПЗПІ-23-4							Сокорчук І. П.
+Кулаков С. М.
+
+
+
+Харків, 2024
+ЗАВДАННЯ
+Розмітка екрана. Файли розмітки Layout. Життєвий цикл та методи Activity
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　
+　　　　ХІД РОБОТИ
+　　　　Розмітка екрана.
+　　　　Відкриваємо Android Studio та створюємо новий проєкт. Відкриваємо файл розмітки res/layout/activity_main.xml, де будемо практикуватись в створенні різних розміток.
+　　　　Створення LinearLayout: створюємо розітку, що містить три кнопки, розташовані одна під одною, застосовуємо властивість vertical для вертикальної орієнтації розмітки. Для кожної кнопки були задані властивості weight та height, та було проексперементовано із різними значеннями, такими як: wrap_content, match_parent та weight.
+　　　　Створення ConstraintLayout: ця розмітка встановлюється автоматично при запуску застосунку, тож всі інші розмітки я вирішив розташувати всередені даної. Окрім цього були додані елементи для вводу тексту, кнопка, зображення. Для них були застосовані обмеження для розташування - constraints.
+　　　　Створення RelativeLayout: було розміщено кілька елементів відносно один одного з використанням атрибуів, таких як layout_below, layout_alignStart.
+　　　　Створення FrameLayout: було створено кілька кнопок, щоб побачити, як вони накладаються одна на одну.
+　　　　Створення GridLayout: було створено інтерфейс, що нагадує інтерфейс калькулятору: 9 кнопок для вводу цифр, та елемент вводу тексту, що виводить набрану цифру.
+　　　　
+　　　　Обробка подій.
+　　　　Як я зазначив раніше, було створено елемент textView, що відображає текст кнопки, на яку натискає користувач. Код обробника події натискання:
+　　　　
+1.private void onButtonClick(View view) {
+2.   Button button = (Button) view;
+3.    String buttonText = button.getText().toString();
+4.    currentInput.append(buttonText);
+5.    textViewDisplay.setText(currentInput.toString());
+6. }
+　　　　
+　　　　Життєвий цикл та методи Activity
+　　　　До кожного методу життєвого циклу було додано функцію виведення повідомлень у Log для відстеження послідовності кліків.
+Приклад такї функції:
+1.Log.d(TAG, "onResume called"); інші подібні функції однакові.
+
+Потім було створено клікер, функція якого - зберігати кількість кліків користувача.
+1.tvCounter = findViewById(R.id.tvCounter);
+2. btnIncrement = findViewById(R.id.btnIncrement);
+3. btnIncrement.setOnClickListener(v -> {
+4.    counter++;
+5.    tvCounter.setText("Лічильник: " + counter);
+6. });
+
+Також було створено таймер, який призупиняє мвою роботу при виклику onPause:
+1.@Override
+2. protected void onPause() {
+3.    super.onPause();
+4.    if (isTimerRunning) {
+5.        handler.removeCallbacks(timerRunnable);
+6.        isTimerRunning = false;
+7.    }
+8.    Log.d(TAG, "onPause called");
+9. }
+2.
+Відновлює свою роботу при виклику onResume.
+1.@Override
+2. protected void onResume() {
+3.    super.onResume();
+4.    if (!isTimerRunning) {
+5.        handler.postDelayed(timerRunnable, 1000);
+6.        isTimerRunning = true;
+7.    }
+8.    Log.d(TAG, "onResume called");
+9. }
+	Створення другої активності
+Була додана кнопка для переходу з першої активності у другу
+1.button = findViewById(R.id.btnGoToSecondActivity);
+
+Відстежуємо  виклики методів життєвого циклу при переході між Activity, та завершуємо другу активність:
+1.public void onClick(View v) {
+2.    finish();
+3.}
+
+
+
+
+
+
+
+
+	
+
+
+ВИСНОВКИ
+Під час виконання практичної роботи було досліджено: створення різних розміток екрану, виявлено, як компоненти взаємодіють між собою. Також я ознайомився із життєвим циклом компонентів Activity у Android-застосунках.
+Посилання на відео-звіт: https://www.youtube.com/watch?v=WrfNINwRG-c
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ВИКОРИСТАНІ ДЖЕРЕЛА
+1)Розмітка екрану - https://dl.nure.ua/mod/page/view.php?id=583063
+2)Файли розмітки Layout - https://dl.nure.ua/mod/page/view.php?id=583066
+3)Життєвий цикл та методи Activity - https://dl.nure.ua/mod/page/view.php?id=599544
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК А
+ Файл розмітки:
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="30dp"
+    tools:context=".MainActivity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hello"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button"
+        android:layout_marginTop="16dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Кнопка"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/imageView"
+        android:layout_marginTop="16dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintTop_toBottomOf="@+id/button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="336dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView">
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="193dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Кнопка1" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="249dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:text="Кнопка2" />
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="302dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.6"
+            android:layout_marginBottom="16dp"
+            android:text="Кнопка3" />
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="2"
+        android:rowCount="2"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:hint="Введіть текст"
+            android:layout_margin="8dp"
+            android:layout_gravity="fill" />
+
+        <Button
+            android:id="@+id/changeTextButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_columnSpan="2"
+            android:text="Натисніть і ваш текст буде вгорі!"
+            android:layout_margin="8dp"
+            android:layout_gravity="fill" />
+    </GridLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+			
+
+
