@@ -1,0 +1,250 @@
+МІНІСТЕРСТВО ОСВТИ І НАУКИ УКРАЇНИ
+
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+
+
+
+
+
+
+ЗВІТ
+з лабораторної роботи №5
+з дисципліни “Програмування під Android”
+
+
+
+
+
+
+
+Виконав:								Перевірив:
+ст. гр. ПЗПІ-23-4							Сокорчук І. П.
+Кулаков С. М.
+
+
+
+
+Харків, 2024
+ЗАВДАННЯ
+　　　　Доповнити завдання №4 наступними функціями:реалізувати різне відображення для портретної та ланшафтної орієнтації екрану за допомогою тих самих фрагментів;створити дві редаговані теми (тло, гарнітура шрифту, колір тексту тощо) і застосовувати їх в залежності від налаштувань програми.додати можливість задавати в налаштуваннях програми розмір шрифту.Переробити завдання №4 так, щоб дані нотаток зберігалися у базі даних SQLite
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ХІД РОБОТИ
+	Продовжуємо роботу над нашим застосунком для ведіння нотатків. Створимо відображення для ландшафтної орієнтації екрану використовуючи ті ж самі фрагменти. Для цього створимо нові розмітки тих самих же елементів тільки для ландшафтної орієнтації. У звіт для прикладу додам ландшафтну розмітку файлу отатки, що буде міститися у ДОДАТКУ А. 
+　　　　Далі в завданні є пункт про створення двох редагованих тем. Для реалізації цієї функції в наш action_bar додамо перемикач, що буде встановлювати тему застосунку.
+　　　　
+1.<Switch
+2.     android:id="@+id/themeSwitch"
+3.     android:layout_width="wrap_content"
+4.     android:layout_height="wrap_content"
+5.     android:layout_marginStart="4dp"
+6.     android:layout_marginEnd="8dp"
+   7.app:layout_constraintStart_toEndOf="@+id/fontSizeSpinner"
+8.    app:layout_constraintEnd_toEndOf="parent"
+9.    app:layout_constraintTop_toTopOf="parent"
+10.    app:layout_constraintBottom_toBottomOf="parent" />
+
+	Ще одно нововведення - додавання можливості зміни шрифту у застосунку. Для кього також на action_bar додамо елемент Spinner, аналогічний до того, що вже використовується при фільтрації нотаток за важливістю.
+
+1.<Spinner
+2.     android:id="@+id/fontSizeSpinner"
+3.     android:layout_width="0dp"
+4.     android:layout_height="wrap_content"
+5.     android:layout_marginStart="4dp"
+6.     android:layout_marginEnd="4dp"
+7.     android:entries="@array/fonts"
+8.     android:prompt="@string/font"
+9.app:layout_constraintStart_toEndOf="@+id/spinnerPriorityFilter"
+     10.app:layout_constraintEnd_toStartOf="@+id/themeSwitch"
+11.    app:layout_constraintTop_toTopOf="parent"
+12.    app:layout_constraintBottom_toBottomOf="parent" />
+
+	Ще одна відміна лабораторної роботи №5 від лабораторної роботи №4 те, що нотатки зберігаються в SQLite, тому переробимо наш клас Note та додамо в нього поле id.
+
+1.public class Note {
+2.     private int id;
+3.     private String Title;
+4.     private String Description;
+5.     private int Priority;
+6.     private Date CreateDate;
+7.     private Date DueDate;
+8.     private int DueHour;
+9.     private String PhotoPath;
+
+	Наступним кроком - створюємо клас NoteDatabaseHelper, що успадковує клас SQLiteOpenHelper
+
+1.public class NotesDatabaseHelper extends SQLiteOpenHelper {
+2.    private static final String DATABASE_NAME = "notes.db";
+3.     private static final int DATABASE_VERSION = 2;
+4.     private static final String TABLE_NOTES = "notes";
+5.     private static final String COLUMN_ID = "id";
+6.     private static final String COLUMN_TITLE = "title";
+7.     private static final String COLUMN_DESCRIPTION = "description";
+8.    private static final String COLUMN_PRIORITY = "priority";
+9.    private static final String COLUMN_CREATED_DATE = "created_date";
+10.    private static final String COLUMN_DUE_DATE = "due_date";
+11.    private static final String COLUMN_DUE_HOUR = "due_hour";
+12.    private static final String COLUMN_PHOTO_PATH = "photo_path";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ВИСНОВКИ
+	Під час виконання лабораторної роботи було вдосконалено попередню версію застосунку. Ми реалізували нові функції, такі як створення темної теми, можливість вибору розміру шрифту та збереження нотаток у базі даних SQLite.
+Посилання: https://youtu.be/AM-UnRE7_H0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ВИКОРИСТАНІ ДЖЕРЕЛА
+1 - https://dl.nure.ua/mod/page/view.php?id=606534
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ДОДАТОК А
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp"
+    android:background="@android:color/white"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/priorityIcon"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/level1" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/noteTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Назва нотатки"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="?attr/android:textColorPrimary" />/>
+
+        <TextView
+            android:id="@+id/noteDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Опис нотатки"
+            android:textSize="14sp"
+            android:textColor="?attr/android:textColorPrimary" />/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/noteDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="12:00"
+        android:textSize="12sp"
+        android:layout_marginEnd="8dp"
+        android:textColor="?attr/android:textColorPrimary" />/>
+    <ImageView
+        android:id="@+id/noteImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="8dp"
+        android:scaleType="centerCrop" />
+
+</LinearLayout>
